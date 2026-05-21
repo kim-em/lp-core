@@ -37,9 +37,12 @@ structure LPBackend where
       * 100  — pure-Lean reference,
       * 1000 — experimental / opt-in.
 
-      Tactic users override via `set_option lp.backend` or per-call
-      argument; do not re-register the same name with a different
-      priority. -/
+      The `kim-em/lp-tactic` registry's `dispatchSolveExact` picks
+      the first backend (in this order) whose probe succeeds. A
+      future tactic-side override surface (`set_option lp.backend` /
+      `(backend := <ident>)`) will let callers pin a specific
+      backend by name; it is not implemented yet. Do not re-register
+      the same name with a different priority. -/
   defaultPriority : Nat := 100
   /-- Solve a validated LP and return its certificate. The argument is
       the post-`validate` problem; backends should not re-run
