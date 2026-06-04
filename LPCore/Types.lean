@@ -105,7 +105,15 @@ structure RawProblem (numConstraints numVars : Nat) where
 inductive IndexKind | row | col | sparseEntry
   deriving Repr, DecidableEq
 
-/-- Why `validate` rejected a `Problem`. -/
+/-- Problem-related reasons a solve request cannot proceed. Most
+    variants describe malformed or unrepresentable input caught at
+    the validation / boundary layer (`validate`, `validateRaw`,
+    `Problem.ofRaw`). `unsupportedFeature` is the exception: it
+    describes a well-formed problem that falls outside a particular
+    backend's first-cut scope. Keeping both flavours in one type lets
+    `SolveError.invalidProblem` carry either without overloading
+    `SolveError.bridge`, so a dispatcher can distinguish "try a more
+    capable backend" from "the bridge protocol is broken." -/
 inductive ProblemError
   /-- An array field had the wrong length for the declared `numVars` /
       `numConstraints`. -/
@@ -117,6 +125,15 @@ inductive ProblemError
   | indexOutOfRange  (kind : IndexKind) (index bound : Nat)
   /-- A bound pair had `lo > hi`. -/
   | boundInverted    (kind : IndexKind) (i : Nat) (lo hi : Rat)
+  /-- The problem is well-formed but uses a feature the chosen
+      backend does not yet implement (e.g. ranged constraints, free
+      variables, or bound shapes the backend has not implemented).
+      Backends surface this as `SolveError.invalidProblem
+      (.unsupportedFeature msg)` so that a dispatcher can fall
+      through to a more capable backend instead of treating the
+      failure as a bridge-protocol breakdown. `msg` should name the
+      unsupported feature. -/
+  | unsupportedFeature (msg : String)
   deriving Repr
 
 /-- Why `validateOptions` rejected an `Options`. -/
@@ -215,9 +232,15 @@ structure FloatSolution (numVars : Nat) where
   log         : String
   deriving Repr, Inhabited
 
-/-- Errors surfaced by the FFI layer. Invalid Lean-side inputs are
-    reported structurally; all unclassified C++ / SoPlex failures remain
-    bridge errors. True bridge-invariant violations may still `panic`. -/
+/-- Errors surfaced by a backend's `solveExact`. Problem-related
+    failures are reported as `invalidProblem`: malformed inputs use
+    the structural validation variants of `ProblemError`, while
+    backend capability misses use `ProblemError.unsupportedFeature`.
+    All unclassified C++ / SoPlex failures remain bridge errors;
+    true bridge-invariant violations may still `panic`. Dispatchers
+    should treat `invalidProblem (.unsupportedFeature _)` as a cue
+    to try another backend, and `bridge _` as a protocol breakdown
+    to abort. -/
 inductive SolveError
   | invalidProblem (e : ProblemError)
   | invalidOptions (e : OptionError)
