@@ -17,7 +17,7 @@
 
 import LPCore.Types
 
-namespace Soplex
+namespace LP
 
 /-! ## `validateOptions`. -/
 
@@ -136,4 +136,4 @@ def validateRaw {numConstraints numVars : Nat}
   let p ← Problem.ofRaw p
   validate p
 
-end Soplex
+end LP

@@ -3,23 +3,23 @@
   `Certificate`, `SolveError`, and supporting enums.
 
   This is pure-Lean data, no native dependencies. It is the single
-  agreed-upon shape that every consumer in the `kim-em/lean-soplex`
+  agreed-upon shape that every consumer in the `leanprover/lp`
   family understands:
 
-  * the FFI binding (`kim-em/soplex-ffi`) marshals it across the C++
+  * the FFI binding (`leanprover/soplex-ffi`) marshals it across the C++
     boundary;
-  * the verifier (`kim-em/lp-verify`) checks certificates against it;
-  * the tactic (`kim-em/lp-tactic`) hands it to whichever `LPBackend`
+  * the verifier (`leanprover/lp-verify`) checks certificates against it;
+  * the tactic (`leanprover/lp-tactic`) hands it to whichever `LPBackend`
     is chosen;
-  * every backend (`kim-em/lp-backend-*`) consumes a `Problem` and
+  * every backend (`leanprover/lp-backend-*`) consumes a `Problem` and
     produces a `Solution`.
 
-  Declarations live in `namespace Soplex` so that downstream consumers
-  refer to `Soplex.Problem`, `Soplex.Options`, etc. unambiguously
+  Declarations live in `namespace LP` so that downstream consumers
+  refer to `LP.Problem`, `LP.Options`, etc. unambiguously
   regardless of which package they imported the type from.
 -/
 
-namespace Soplex
+namespace LP
 
 /-- Largest natural value this package passes through SoPlex APIs that
     take C++ `int` parameters. -/
@@ -262,4 +262,4 @@ def canonicalize {m n : Nat} (sense : ObjSense) (p : Problem m n) : Problem m n 
   | .minimize => p
   | .maximize => negateObjective p
 
-end Soplex
+end LP

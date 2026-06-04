@@ -11,7 +11,7 @@
 
 import LPCore.Types
 
-namespace Soplex.LP
+namespace LP
 
 /-- Concrete LP solver backend.
 
@@ -37,7 +37,7 @@ structure LPBackend where
       * 100  — pure-Lean reference,
       * 1000 — experimental / opt-in.
 
-      The `kim-em/lp-tactic` registry's `dispatchSolveExact` picks
+      The `leanprover/lp-tactic` registry's `dispatchSolveExact` picks
       the first backend (in this order) whose probe succeeds. A
       future tactic-side override surface (`set_option lp.backend` /
       `(backend := <ident>)`) will let callers pin a specific
@@ -69,4 +69,4 @@ def lt (a b : LPBackend) : Bool :=
 
 end LPBackend
 
-end Soplex.LP
+end LP

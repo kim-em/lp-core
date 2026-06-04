@@ -7,9 +7,9 @@ open Lake DSL
   `Certificate`, `SolveError`, supporting enums + validators) plus
   the `LPBackend` record. No native dependencies, no `moreLinkArgs`.
 
-  This is the shared seam that `kim-em/soplex-ffi`,
-  `kim-em/lp-verify`, `kim-em/lp-tactic`, and every
-  `kim-em/lp-backend-*` package depends on.
+  This is the shared seam that `leanprover/soplex-ffi`,
+  `leanprover/lp-verify`, `leanprover/lp-tactic`, and every
+  `leanprover/lp-backend-*` package depends on.
 -/
 
 package LPCore

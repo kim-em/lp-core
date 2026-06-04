@@ -1,23 +1,27 @@
 # LPCore
 
 [![Lean](https://img.shields.io/badge/Lean-4.31.0--rc1-blue.svg)](./lean-toolchain)
-[![License](https://img.shields.io/github/license/kim-em/lp-core.svg)](./LICENSE)
+[![License](https://img.shields.io/github/license/leanprover/lp-core.svg)](./LICENSE)
+
+> **New here? Start at [`leanprover/lp`](https://github.com/leanprover/lp)** — the entry
+> point for the `lp` / `maximize` tactics and the verified LP solver. This repository is one
+> package of that family: the shared LP type vocabulary and the `LPBackend` record.
 
 The shared LP type vocabulary and backend abstraction every package
-in the [`kim-em/soplex`](https://github.com/kim-em/soplex) family
+in the [`leanprover/lp`](https://github.com/leanprover/lp) family
 agrees on. Pure Lean, no native dependencies, no `moreLinkArgs`.
 
 This repository defines `Problem`, `Options`, `Solution`,
 `Certificate`, `SolveError` (the data) plus the `LPBackend` record
 (the abstraction concrete solvers implement). It is consumed by:
 
-* [`kim-em/soplex-ffi`](https://github.com/kim-em/soplex-ffi) — marshals the data across the C++ boundary,
-* [`kim-em/lp-verify`](https://github.com/kim-em/lp-verify) — checks certificates against the same `Problem`,
-* [`kim-em/lp-tactic`](https://github.com/kim-em/lp-tactic) — drives the `by lp` tactic and owns the backend registry,
-* `kim-em/lp-backend-*` — every concrete backend produces an `LPBackend`,
-* [`kim-em/soplex`](https://github.com/kim-em/soplex) — the meta-package; `import Soplex` is the front door.
+* [`leanprover/soplex-ffi`](https://github.com/leanprover/soplex-ffi) — marshals the data across the C++ boundary,
+* [`leanprover/lp-verify`](https://github.com/leanprover/lp-verify) — checks certificates against the same `Problem`,
+* [`leanprover/lp-tactic`](https://github.com/leanprover/lp-tactic) — drives the `by lp` tactic and owns the backend registry,
+* `leanprover/lp-backend-*` — every concrete backend produces an `LPBackend`,
+* [`leanprover/lp`](https://github.com/leanprover/lp) — the meta-package; `import LP` is the front door.
 
-If you just want `by lp` end-to-end, depend on `kim-em/soplex`.
+If you just want `by lp` end-to-end, depend on `leanprover/lp`.
 Depend on `lp-core` directly only when you are writing another
 package in this family (a new backend, a verifier variant, a
 serialiser, etc.).
@@ -27,7 +31,7 @@ serialiser, etc.).
 Add `LPCore` to your `lakefile.lean`:
 
 ```lean
-require LPCore from git "https://github.com/kim-em/lp-core" @ "main"
+require LPCore from git "https://github.com/leanprover/lp-core" @ "main"
 ```
 
 A `Problem` with two variables, two constraints, and a maximise
@@ -35,7 +39,7 @@ objective looks like this:
 
 ```lean
 import LPCore
-open Soplex
+open LP
 
 def lp : Problem 2 2 :=
   { c         := #v[3, 5]
@@ -51,12 +55,12 @@ example : Except ProblemError (Problem 2 2) := validate lp
 
 `LPCore` does not solve LPs on its own — it provides the data
 contract. To actually solve, pull in a backend (e.g. the FFI
-backend bundled with `kim-em/soplex`) or write your own
+backend bundled with `leanprover/lp`) or write your own
 implementing `LPBackend`.
 
 ## Trust model
 
-Pure Lean. The verifier ([`kim-em/lp-verify`](https://github.com/kim-em/lp-verify))
+Pure Lean. The verifier ([`leanprover/lp-verify`](https://github.com/leanprover/lp-verify))
 treats `Problem` and `Certificate` as opaque inputs and validates
 the certificate's mathematical claims before constructing any proof.
 This package adds no trust assumptions of its own.
@@ -70,13 +74,13 @@ LPCore/Validate.lean     # validate, validateOptions, validateRaw
 LPCore/Backend.lean      # the LPBackend record + lt comparator
 ```
 
-All declarations live in `namespace Soplex` (and `namespace Soplex.LP`
-for `LPBackend`). The namespace is shared across this family of
-packages; consumers refer to `Soplex.Problem`, `Soplex.Options`,
+All declarations live in `namespace LP` (`Problem`, `Options`, …,
+and the `LPBackend` record). The namespace is shared across this
+family of packages; consumers refer to `LP.Problem`, `LP.Options`,
 etc. regardless of which package they imported the type from.
 
 ## Licence
 
 `LPCore` is licensed under the [Apache License 2.0](./LICENSE),
-matching the rest of the `kim-em/soplex` family and SoPlex
+matching the rest of the `leanprover/lp` family and SoPlex
 itself.
