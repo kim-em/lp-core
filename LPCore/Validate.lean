@@ -14,8 +14,11 @@
   This is the pure Lean boundary before data reaches either C++ or
   the verifier. No native dependencies.
 -/
+module
 
-import LPCore.Types
+public import LPCore.Types
+
+@[expose] public section
 
 namespace LP
 
@@ -43,7 +46,7 @@ def validateOptions (o : Options) : Except OptionError Options := do
 
 /-! ## `validate`. -/
 
-private def finEntryOfRaw {numConstraints numVars : Nat}
+def finEntryOfRaw {numConstraints numVars : Nat}
     (entry : Nat × Nat × Rat) :
     Except ProblemError (Fin numConstraints × Fin numVars × Rat) := do
   let (r, c, v) := entry
@@ -68,7 +71,7 @@ def Problem.ofRaw {numConstraints numVars : Nat}
   }
 
 /-- Compare `(row, col)` pairs lexicographically. -/
-@[inline] private def entryLt {m n : Nat}
+@[inline] def entryLt {m n : Nat}
     (x y : Fin m × Fin n × Rat) : Bool :=
   let (r₁, c₁, _) := x
   let (r₂, c₂, _) := y
@@ -77,7 +80,7 @@ def Problem.ofRaw {numConstraints numVars : Nat}
 /-- Sum consecutive equal-key entries in a sorted sparse list, drop
     zero results, and return the normalised array. Assumes input is
     already sorted by `entryLt`. -/
-private def collapseSorted {m n : Nat} (a : Array (Fin m × Fin n × Rat)) :
+def collapseSorted {m n : Nat} (a : Array (Fin m × Fin n × Rat)) :
     Array (Fin m × Fin n × Rat) :=
   match a.toList with
   | [] => #[]
@@ -101,7 +104,7 @@ private def collapseSorted {m n : Nat} (a : Array (Fin m × Fin n × Rat)) :
       return out
 
 /-- Normalise the sparse matrix: sort, sum duplicates, drop zeros. -/
-private def normaliseSparse {m n : Nat} (a : Array (Fin m × Fin n × Rat)) :
+def normaliseSparse {m n : Nat} (a : Array (Fin m × Fin n × Rat)) :
     Array (Fin m × Fin n × Rat) :=
   collapseSorted (a.qsort entryLt)
 

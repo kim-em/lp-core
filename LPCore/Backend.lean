@@ -8,8 +8,11 @@
 
   Pure Lean, no native dependencies.
 -/
+module
 
-import LPCore.Types
+public import LPCore.Types
+
+@[expose] public section
 
 namespace LP
 
