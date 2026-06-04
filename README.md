@@ -1,10 +1,10 @@
 # LPCore
 
-[![Lean](https://img.shields.io/badge/Lean-4.29.1-blue.svg)](./lean-toolchain)
+[![Lean](https://img.shields.io/badge/Lean-4.31.0--rc1-blue.svg)](./lean-toolchain)
 [![License](https://img.shields.io/github/license/kim-em/lp-core.svg)](./LICENSE)
 
 The shared LP type vocabulary and backend abstraction every package
-in the [`kim-em/lean-soplex`](https://github.com/kim-em/soplex) family
+in the [`kim-em/soplex`](https://github.com/kim-em/soplex) family
 agrees on. Pure Lean, no native dependencies, no `moreLinkArgs`.
 
 This repository defines `Problem`, `Options`, `Solution`,
@@ -54,6 +54,13 @@ contract. To actually solve, pull in a backend (e.g. the FFI
 backend bundled with `kim-em/soplex`) or write your own
 implementing `LPBackend`.
 
+## Trust model
+
+Pure Lean. The verifier ([`kim-em/lp-verify`](https://github.com/kim-em/lp-verify))
+treats `Problem` and `Certificate` as opaque inputs and validates
+the certificate's mathematical claims before constructing any proof.
+This package adds no trust assumptions of its own.
+
 ## Layout
 
 ```
@@ -68,15 +75,8 @@ for `LPBackend`). The namespace is shared across this family of
 packages; consumers refer to `Soplex.Problem`, `Soplex.Options`,
 etc. regardless of which package they imported the type from.
 
-## Trust model
-
-Pure Lean. The verifier ([`kim-em/lp-verify`](https://github.com/kim-em/lp-verify))
-treats `Problem` and `Certificate` as opaque inputs and validates
-the certificate's mathematical claims before constructing any proof.
-This package adds no trust assumptions of its own.
-
 ## Licence
 
 `LPCore` is licensed under the [Apache License 2.0](./LICENSE),
-matching the rest of the `kim-em/lean-soplex` family and SoPlex
+matching the rest of the `kim-em/soplex` family and SoPlex
 itself.
