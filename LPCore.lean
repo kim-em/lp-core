@@ -8,6 +8,8 @@
   keep working.
 -/
 
-import LPCore.Types
-import LPCore.Validate
-import LPCore.Backend
+module
+
+public import LPCore.Types
+public import LPCore.Validate
+public import LPCore.Backend

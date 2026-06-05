@@ -18,6 +18,9 @@
   refer to `LP.Problem`, `LP.Options`, etc. unambiguously
   regardless of which package they imported the type from.
 -/
+module
+
+@[expose] public section
 
 namespace LP
 
