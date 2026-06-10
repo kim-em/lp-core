@@ -41,11 +41,12 @@ structure LPBackend where
       * 1000 — experimental / opt-in.
 
       The `leanprover/lp-tactic` registry's `dispatchSolveExact` picks
-      the first backend (in this order) whose probe succeeds. A
-      future tactic-side override surface (`set_option lp.backend` /
-      `(backend := <ident>)`) will let callers pin a specific
-      backend by name; it is not implemented yet. Do not re-register
-      the same name with a different priority. -/
+      the first backend (in this order) whose probe succeeds. Callers
+      can also pin a specific backend by name: `set_option lp.backend
+      "<name>"` scopes an override, and the tactic accepts a per-call
+      `lp (backend := <ident>)` argument (both implemented in
+      `leanprover/lp-tactic`). Do not re-register the same name with
+      a different priority. -/
   defaultPriority : Nat := 100
   /-- Solve a validated LP and return its certificate. The argument is
       the post-`validate` problem; backends should not re-run
