@@ -18,3 +18,9 @@ package LPCore
 lean_lib LPCore where
   roots := #[`LPCore]
   globs := #[`LPCore, `LPCore.Types, `LPCore.Validate, `LPCore.Backend]
+
+/-- `lake test` entry point: validator behavioral tests plus a
+    compile check of the README quickstart example. -/
+@[test_driver]
+lean_exe «validate-tests» where
+  root := `LPCoreTest.Validate
