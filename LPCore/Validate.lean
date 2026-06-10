@@ -82,14 +82,13 @@ def Problem.ofRaw {numConstraints numVars : Nat}
     already sorted by `entryLt`. -/
 def collapseSorted {m n : Nat} (a : Array (Fin m × Fin n × Rat)) :
     Array (Fin m × Fin n × Rat) :=
-  match a.toList with
-  | [] => #[]
-  | first :: rest => Id.run do
+  if h : 0 < a.size then Id.run do
+      let first := a[0]
       let mut out : Array (Fin m × Fin n × Rat) := Array.mkEmpty a.size
       let mut curR : Fin m := first.1
       let mut curC : Fin n := first.2.1
       let mut curV : Rat := first.2.2
-      for entry in rest do
+      for entry in a[1:] do
         let (r, c, v) := entry
         if r = curR && c = curC then
           curV := curV + v
@@ -102,6 +101,7 @@ def collapseSorted {m n : Nat} (a : Array (Fin m × Fin n × Rat)) :
       if curV ≠ 0 then
         out := out.push (curR, curC, curV)
       return out
+  else #[]
 
 /-- Normalise the sparse matrix: sort, sum duplicates, drop zeros. -/
 def normaliseSparse {m n : Nat} (a : Array (Fin m × Fin n × Rat)) :
